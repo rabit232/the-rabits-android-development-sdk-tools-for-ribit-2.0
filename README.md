@@ -11,6 +11,7 @@ the-rabits-android-development-sdk-tools-for-ribit-2.0/
 ├── MyAndroidApp/           # Traditional Java/Gradle Android Project
 ├── MyCordovaApp/          # Apache Cordova/PhoneGap Project
 ├── MyPythonApp/           # Python Kivy Cross-Platform Project
+├── UbuntuDebianAndroidAPK/ # Ubuntu Debian Android Environment APK
 ├── DemoAPK/               # Documentation and Demo Files
 └── README.md              # This file
 ```
@@ -76,6 +77,31 @@ the-rabits-android-development-sdk-tools-for-ribit-2.0/
 - Descriptive subtitle
 - Blue color scheme
 - Responsive layout
+
+### 4. Ubuntu Debian Android Environment (`UbuntuDebianAndroidAPK/`)
+
+**Features:**
+- Complete Ubuntu Debian environment on Android
+- Ribit 2.0 AI development tools integration
+- Full desktop environment via VNC
+- Android SDK and development tools
+- Python AI/ML stack with Jupyter Notebook
+
+**Key Files:**
+- `ribit-debian-android-setup.sh` - Main installation script
+- `ribit-debian-android-app.py` - Python Kivy APK application
+- `build-debian-android-apk.sh` - APK build automation
+- `buildozer.spec` - Python APK build configuration
+- `INSTALLATION_INSTRUCTIONS.md` - Comprehensive user guide
+
+**Revolutionary Capabilities:**
+- Transform Android device into Linux development workstation
+- Full XFCE desktop environment accessible via VNC
+- Complete AI development stack (PyTorch, Transformers, OpenAI API)
+- Android app development with SDK and Gradle
+- Cross-platform development with Node.js and Cordova
+- Jupyter Notebook for interactive AI development
+- Custom Ribit 2.0 launcher and development tools
 
 ## 🔧 Build Instructions
 
@@ -173,6 +199,7 @@ pip3 install buildozer python-for-android kivy cython
 | Java/Gradle | ⚠️ Partial | ❌ | Gradle compatibility issues |
 | Cordova | ⚠️ Partial | ❌ | Platform added successfully |
 | Python/Kivy | 🔄 In Progress | ⏳ | NDK download in progress |
+| Ubuntu Debian APK | ✅ Complete | ✅ | Full environment installer ready |
 
 ## 🎨 App Features
 
