@@ -1,0 +1,146 @@
+name: Build Ribit 2.0 Debian Android APK
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'UbuntuDebianAndroidAPK/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'UbuntuDebianAndroidAPK/**'
+  release:
+    types: [created]
+
+jobs:
+  build-cordova:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Java 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install Cordova
+      run: npm install -g cordova
+      
+    - name: Build Cordova APK
+      run: |
+        cd UbuntuDebianAndroidAPK
+        chmod +x build-debian-android-apk.sh
+        ./build-debian-android-apk.sh
+        
+    - name: Upload Cordova APK
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: ribit-debian-android-cordova
+        path: UbuntuDebianAndroidAPK/ribit-debian-android.apk
+        retention-days: 30
+
+  build-python:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Setup Java 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential git unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+        
+    - name: Install Python dependencies
+      run: |
+        cd UbuntuDebianAndroidAPK
+        pip install -r requirements.txt
+        
+    - name: Build Python APK
+      run: |
+        cd UbuntuDebianAndroidAPK
+        buildozer android debug
+      timeout-minutes: 60
+      
+    - name: Upload Python APK
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: ribit-debian-android-python
+        path: UbuntuDebianAndroidAPK/bin/*.apk
+        retention-days: 30
+
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install test dependencies
+      run: |
+        sudo apt install -y shellcheck
+        pip install flake8
+        
+    - name: Run tests
+      run: |
+        cd UbuntuDebianAndroidAPK
+        make test
+        
+    - name: Run linting
+      run: |
+        cd UbuntuDebianAndroidAPK
+        make lint
+      continue-on-error: true
+
+  release:
+    needs: [build-cordova, build-python, test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    
+    steps:
+    - name: Download Cordova APK
+      uses: actions/download-artifact@v3
+      with:
+        name: ribit-debian-android-cordova
+        path: ./cordova/
+        
+    - name: Download Python APK
+      uses: actions/download-artifact@v3
+      with:
+        name: ribit-debian-android-python
+        path: ./python/
+        
+    - name: Upload Release Assets
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          cordova/*.apk
+          python/*.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

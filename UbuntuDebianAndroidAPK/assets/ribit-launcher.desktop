@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Ribit 2.0 AI Development
+Comment=Launch Ribit 2.0 AI development environment
+Exec=python3 /home/ribit/ribit-workspace/ribit-launcher.py
+Icon=/home/ribit/ribit-workspace/assets/ribit-icon.png
+Terminal=false
+Categories=Development;IDE;
+StartupNotify=true
+MimeType=text/x-python;
+Keywords=AI;Development;Python;Android;Machine Learning;
